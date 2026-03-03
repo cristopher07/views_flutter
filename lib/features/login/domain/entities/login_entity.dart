@@ -1,9 +1,9 @@
 class LoginEntity {
   final String username;
-  final bool isAuthenticated;
+  final bool authenticatedIs;
 
   const LoginEntity({
     required this.username,
-    required this.isAuthenticated,
+    required this.authenticatedIs,
   });
 }

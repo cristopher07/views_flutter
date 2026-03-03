@@ -5,8 +5,8 @@ class SettingsRepositoryImpl implements SettingsRepository {
   @override
   Future<SettingsEntity> getSettings() async {
     return const SettingsEntity(
-      notificationsEnabled: true,
-      languageCode: 'en',
+      enabledNotifications: true,
+      codeLanguage: 'en',
     );
   }
 }

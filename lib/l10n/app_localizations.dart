@@ -98,11 +98,11 @@ abstract class AppLocalizations {
     Locale('es'),
   ];
 
-  /// No description provided for @appTitle.
+  /// No description provided for @titleApp.
   ///
   /// In en, this message translates to:
   /// **'Flutter Demo'**
-  String get appTitle;
+  String get titleApp;
 
   /// No description provided for @balance.
   ///
@@ -128,11 +128,11 @@ abstract class AppLocalizations {
   /// **'Login'**
   String get login;
 
-  /// No description provided for @emailAddress.
+  /// No description provided for @addressEmail.
   ///
   /// In en, this message translates to:
   /// **'Email Address'**
-  String get emailAddress;
+  String get addressEmail;
 
   /// No description provided for @password.
   ///
@@ -140,29 +140,29 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get password;
 
-  /// No description provided for @forgotPassword.
+  /// No description provided for @passwordForgot.
   ///
   /// In en, this message translates to:
   /// **'Forgot password?'**
-  String get forgotPassword;
+  String get passwordForgot;
 
-  /// No description provided for @notMember.
+  /// No description provided for @memberNot.
   ///
   /// In en, this message translates to:
   /// **'Not a member?'**
-  String get notMember;
+  String get memberNot;
 
-  /// No description provided for @registerNow.
+  /// No description provided for @nowRegister.
   ///
   /// In en, this message translates to:
   /// **'Register now'**
-  String get registerNow;
+  String get nowRegister;
 
-  /// No description provided for @orContinueWith.
+  /// No description provided for @withContinueOr.
   ///
   /// In en, this message translates to:
   /// **'Or continue with'**
-  String get orContinueWith;
+  String get withContinueOr;
 
   /// No description provided for @dashboard.
   ///

@@ -6,7 +6,7 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<LoginEntity> getLoginState() async {
     return const LoginEntity(
       username: 'guest',
-      isAuthenticated: false,
+      authenticatedIs: false,
     );
   }
 }

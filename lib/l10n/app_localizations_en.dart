@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Flutter Demo';
+  String get titleApp => 'Flutter Demo';
 
   @override
   String get balance => 'Balance';
@@ -24,22 +24,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login => 'Login';
 
   @override
-  String get emailAddress => 'Email Address';
+  String get addressEmail => 'Email Address';
 
   @override
   String get password => 'Password';
 
   @override
-  String get forgotPassword => 'Forgot password?';
+  String get passwordForgot => 'Forgot password?';
 
   @override
-  String get notMember => 'Not a member?';
+  String get memberNot => 'Not a member?';
 
   @override
-  String get registerNow => 'Register now';
+  String get nowRegister => 'Register now';
 
   @override
-  String get orContinueWith => 'Or continue with';
+  String get withContinueOr => 'Or continue with';
 
   @override
   String get dashboard => 'Dashboard';

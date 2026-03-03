@@ -8,8 +8,8 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final selectedLanguageCode =
-        appLocaleController.value?.languageCode ??
+    final codeLanguageSelected =
+        controllerLocaleApp.value?.languageCode ??
         Localizations.localeOf(context).languageCode;
 
     return Center(
@@ -35,7 +35,7 @@ class SettingsView extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
-                  value: selectedLanguageCode,
+                  value: codeLanguageSelected,
                   decoration: InputDecoration(
                     labelText: localizations.language,
                     filled: true,
@@ -51,11 +51,11 @@ class SettingsView extends StatelessWidget {
                       child: Text(localizations.spanish),
                     ),
                   ],
-                  onChanged: (languageCode) {
-                    if (languageCode == null) {
+                  onChanged: (codeLanguage) {
+                    if (codeLanguage == null) {
                       return;
                     }
-                    appLocaleController.setLanguageCode(languageCode);
+                    controllerLocaleApp.codeLanguageSet(codeLanguage);
                   },
                 ),
               ],

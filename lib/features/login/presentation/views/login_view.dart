@@ -10,10 +10,10 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeColorScheme = Theme.of(context).colorScheme;
+    final schemeColorTheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: themeColorScheme.surfaceBright,
+      backgroundColor: schemeColorTheme.surfaceBright,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.only(bottom: 24),
@@ -65,13 +65,13 @@ class SocialMedia extends StatelessWidget {
 }
 
 class _BodyWidgetState extends State<BodyWidget> {
-  bool _isPasswordObscured = true;
+  bool _obscuredPasswordIs = true;
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final appTheme = Theme.of(context);
-    final appColorScheme = appTheme.colorScheme;
+    final themeApp = Theme.of(context);
+    final schemeColorApp = themeApp.colorScheme;
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -82,33 +82,33 @@ class _BodyWidgetState extends State<BodyWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            Env.appName,
-            style: appTheme.textTheme.headlineSmall?.copyWith(
+            Env.nameApp,
+            style: themeApp.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 24),
           TextField(
             decoration: InputDecoration(
-              hintText: localizations.emailAddress,
+              hintText: localizations.addressEmail,
               filled: true,
               border: const OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16),
           TextField(
-            obscureText: _isPasswordObscured,
+            obscureText: _obscuredPasswordIs,
             decoration: InputDecoration(
               hintText: localizations.password,
               filled: true,
               border: const OutlineInputBorder(),
               suffixIcon: IconButton(
                 icon: Icon(
-                  _isPasswordObscured ? Icons.visibility_off : Icons.visibility,
+                  _obscuredPasswordIs ? Icons.visibility_off : Icons.visibility,
                 ),
                 onPressed: () {
                   setState(() {
-                    _isPasswordObscured = !_isPasswordObscured;
+                    _obscuredPasswordIs = !_obscuredPasswordIs;
                   });
                 },
               ),
@@ -119,7 +119,7 @@ class _BodyWidgetState extends State<BodyWidget> {
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () {},
-              child: Text(localizations.forgotPassword),
+              child: Text(localizations.passwordForgot),
             ),
           ),
           const SizedBox(height: 12),
@@ -141,16 +141,16 @@ class _BodyWidgetState extends State<BodyWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('${localizations.notMember} '),
+              Text('${localizations.memberNot} '),
               TextButton(
                 onPressed: () {
                   debugPrint('Navigate to Sign Up');
                 },
                 child: Text(
-                  localizations.registerNow,
+                  localizations.nowRegister,
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    color: appColorScheme.primary,
+                    color: schemeColorApp.primary,
                   ),
                 ),
               ),
@@ -160,9 +160,9 @@ class _BodyWidgetState extends State<BodyWidget> {
           const Divider(),
           const SizedBox(height: 24),
           Text(
-            localizations.orContinueWith,
+            localizations.withContinueOr,
             textAlign: TextAlign.center,
-            style: appTheme.textTheme.bodyMedium,
+            style: themeApp.textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
           const SocialMedia(),

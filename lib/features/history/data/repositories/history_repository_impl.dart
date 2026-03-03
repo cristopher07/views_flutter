@@ -6,7 +6,7 @@ class HistoryRepositoryImpl implements HistoryRepository {
   Future<List<HistoryEntity>> getHistory() async {
     return const [
       HistoryEntity(
-        operationId: 'OP-0001',
+        idOperation: 'OP-0001',
         description: 'Sample operation',
       ),
     ];

@@ -27,10 +27,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Locale?>(
-      valueListenable: appLocaleController,
+      valueListenable: controllerLocaleApp,
       builder: (context, locale, _) {
         return MaterialApp(
-          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+          onGenerateTitle: (context) => AppLocalizations.of(context)!.titleApp,
           theme: ThemeData(
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),

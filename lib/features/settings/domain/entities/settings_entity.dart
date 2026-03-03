@@ -1,9 +1,9 @@
 class SettingsEntity {
-  final bool notificationsEnabled;
-  final String languageCode;
+  final bool enabledNotifications;
+  final String codeLanguage;
 
   const SettingsEntity({
-    required this.notificationsEnabled,
-    required this.languageCode,
+    required this.enabledNotifications,
+    required this.codeLanguage,
   });
 }

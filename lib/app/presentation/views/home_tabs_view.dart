@@ -14,9 +14,9 @@ class HomeTabsView extends StatefulWidget {
 }
 
 class _HomeTabsViewState extends State<HomeTabsView> {
-  int _selectedTabIndex = 0;
+  int _indexTabSelected = 0;
 
-  final List<Widget> _tabViews = const [
+  final List<Widget> _viewsTab = const [
     DashboardView(),
     TransfersView(),
     HistoryView(),
@@ -29,14 +29,14 @@ class _HomeTabsViewState extends State<HomeTabsView> {
 
     return Scaffold(
       body: IndexedStack(
-        index: _selectedTabIndex,
-        children: _tabViews,
+        index: _indexTabSelected,
+        children: _viewsTab,
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedTabIndex,
+        selectedIndex: _indexTabSelected,
         onDestinationSelected: (selectedIndex) {
           setState(() {
-            _selectedTabIndex = selectedIndex;
+            _indexTabSelected = selectedIndex;
           });
         },
         destinations: [

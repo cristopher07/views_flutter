@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class AppLocaleController extends ValueNotifier<Locale?> {
   AppLocaleController() : super(null);
 
-  void setLanguageCode(String languageCode) {
-    value = Locale(languageCode);
+  void codeLanguageSet(String codeLanguage) {
+    value = Locale(codeLanguage);
   }
 }
 
-final appLocaleController = AppLocaleController();
+final controllerLocaleApp = AppLocaleController();

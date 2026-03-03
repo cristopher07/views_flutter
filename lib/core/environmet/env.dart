@@ -13,11 +13,11 @@ class Env {
   }
   // Variables
  
-  static String get apiBaseUrl => _values['apiUrl'] ?? '';
-  static String get apiKey => _values['apiKey'] ?? '';
-  static String get appName {
-    final appName = _values['appName'];
-    if (appName == null) {
+  static String get urlBaseApi => _values['apiUrl'] ?? '';
+  static String get keyApi => _values['apiKey'] ?? '';
+  static String get nameApp {
+    final nameApp = _values['appName'];
+    if (nameApp == null) {
       debugPrint(
         "Warning: 'appName' is not defined in the environment configuration.",
       );
@@ -32,24 +32,24 @@ class Env {
   static late final Environment environment;
  
   static Future<void> initialize() async {
-    String fileName;
+    String nameFile;
     switch (environment) {
       case Environment.development:
-        fileName = 'env_dev.json';
+        nameFile = 'env_dev.json';
         break;
       case Environment.staging:
-        fileName = 'env_staging.json';
+        nameFile = 'env_staging.json';
         break;
       case Environment.production:
-        fileName = 'env_prod.json';
+        nameFile = 'env_prod.json';
         break;
     }
-    _values = await load(fileName);
+    _values = await load(nameFile);
   }
  
-  static Future<Map<String, dynamic>> load(String fileName) async {
+  static Future<Map<String, dynamic>> load(String nameFile) async {
     // Cargar el archivo JSON correspondiente al entorno
-    return rootBundle.loadString(fileName).then((jsonString) {
+    return rootBundle.loadString(nameFile).then((jsonString) {
       return json.decode(jsonString);
     });
   }
