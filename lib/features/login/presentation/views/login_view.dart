@@ -1,5 +1,4 @@
 import '../../../../core/assets.dart';
-import '../../../../app/presentation/views/home_tabs_view.dart';
 import '../../../../core/environmet/env.dart';
 import '../widgets/social_widget.dart';
 import 'package:flutter/material.dart';
