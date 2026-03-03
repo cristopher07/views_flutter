@@ -124,13 +124,7 @@ class _BodyWidgetState extends State<BodyWidget> {
           ),
           const SizedBox(height: 12),
           FilledButton(
-            onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (_) => const HomeTabsView(),
-                ),
-              );
-            },
+            onPressed: () {},
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: const StadiumBorder(),
