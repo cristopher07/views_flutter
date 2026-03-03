@@ -1,0 +1,22 @@
+{
+    "@@locale": "es",
+    "appTitle": "Demo Flutter",
+    "balance": "Saldo",
+    "transactions": "Transacciones",
+    "welcome": "¡Bienvenido!",
+    "login": "Iniciar sesión",
+    "emailAddress": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "notMember": "¿No eres miembro?",
+    "registerNow": "Regístrate ahora",
+    "orContinueWith": "O continúa con",
+    "dashboard": "Tablero",
+    "history": "Historial",
+    "transfers": "Transferencias",
+    "settings": "Configuración",
+    "language": "Idioma",
+    "english": "Inglés",
+    "spanish": "Español"
+    
+}
