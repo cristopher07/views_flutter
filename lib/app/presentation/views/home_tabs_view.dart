@@ -31,7 +31,7 @@ class _HomeTabsViewState extends State<HomeTabsView> {
       length: 4,
       child: Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Mi APP'),
         bottom: TabBar(
           onTap: (index) {
             setState(() {

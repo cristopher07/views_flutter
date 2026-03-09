@@ -13,55 +13,9 @@ class SettingsView extends StatelessWidget {
         Localizations.localeOf(context).languageCode;
 
     return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 360),
-        child: Card.filled(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.language),
-                    const SizedBox(width: 8),
-                    Text(
-                      localizations.settings,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: codeLanguageSelected,
-                  decoration: InputDecoration(
-                    labelText: localizations.language,
-                    filled: true,
-                    border: const OutlineInputBorder(),
-                  ),
-                  items: [
-                    DropdownMenuItem(
-                      value: 'en',
-                      child: Text(localizations.english),
-                    ),
-                    DropdownMenuItem(
-                      value: 'es',
-                      child: Text(localizations.spanish),
-                    ),
-                  ],
-                  onChanged: (codeLanguage) {
-                    if (codeLanguage == null) {
-                      return;
-                    }
-                    controllerLocaleApp.codeLanguageSet(codeLanguage);
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
+      child: Text(
+        localizations.settings,
+        style: Theme.of(context).textTheme.titleLarge,
       ),
     );
   }
