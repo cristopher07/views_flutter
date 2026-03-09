@@ -97,7 +97,7 @@ class HttpClient {
     }
   }
 
-  /// Manejo de respuestas
+
   T _handleResponse<T>(
     http.Response response,
     T Function(Map<String, dynamic>) fromJson,
@@ -130,7 +130,7 @@ class HttpClient {
     }
   }
 
-  /// Manejo de errores
+  
   ApiException _handleError(dynamic error) {
     if (error is TimeoutException ||
         error is http.ClientException &&
