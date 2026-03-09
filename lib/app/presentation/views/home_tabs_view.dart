@@ -27,40 +27,57 @@ class _HomeTabsViewState extends State<HomeTabsView> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return Scaffold(
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+      appBar: AppBar(
+        title: const Text('Home'),
+        bottom: TabBar(
+          onTap: (index) {
+            setState(() {
+              _indexTabSelected = index;
+            });
+          },
+          tabs: [
+            Tab(
+              icon: Icon(
+                _indexTabSelected == 0 
+                  ? Icons.home 
+                  : Icons.home_outlined,
+              ),
+              text: localizations.dashboard,
+            ),
+            Tab(
+              icon: Icon(
+                _indexTabSelected == 1 
+                  ? Icons.send 
+                  : Icons.send_outlined,
+              ),
+              text: localizations.transfers,
+            ),
+            Tab(
+              icon: Icon(
+                _indexTabSelected == 2 
+                  ? Icons.history 
+                  : Icons.history_outlined,
+              ),
+              text: localizations.history,
+            ),
+            Tab(
+              icon: Icon(
+                _indexTabSelected == 3 
+                  ? Icons.settings 
+                  : Icons.settings_outlined,
+              ),
+              text: localizations.settings,
+            ),
+          ],
+        ),
+      ),
       body: IndexedStack(
         index: _indexTabSelected,
         children: _viewsTab,
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _indexTabSelected,
-        onDestinationSelected: (selectedIndex) {
-          setState(() {
-            _indexTabSelected = selectedIndex;
-          });
-        },
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.dashboard_outlined),
-            selectedIcon: const Icon(Icons.dashboard),
-            label: localizations.dashboard,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.swap_horiz_outlined),
-            selectedIcon: const Icon(Icons.swap_horiz),
-            label: localizations.transfers,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.history_outlined),
-            selectedIcon: const Icon(Icons.history),
-            label: localizations.history,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.settings_outlined),
-            selectedIcon: const Icon(Icons.settings),
-            label: localizations.settings,
-          ),
-        ],
       ),
     );
   }
