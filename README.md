@@ -45,5 +45,9 @@ lib/
 
 - Para instalar flutter use fvm, para correr nuestro proyecto podemos usar: fvm flutter run -d edge
 
+- link para descargar video explicativo de la presentación: https://drive.google.com/file/d/1RCCNW8hwSYRbOFG0m9OQjdUvjLvsUBbc/view?usp=drive_link
+
+link de proyecto en github: https://github.com/cristopher07/views_flutter.git
+
 
 
