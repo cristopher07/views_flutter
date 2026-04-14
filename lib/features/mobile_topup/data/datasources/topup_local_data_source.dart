@@ -12,36 +12,27 @@ abstract class TopUpLocalDataSource {
 }
 
 class TopUpLocalDataSourceImpl implements TopUpLocalDataSource {
-  // Operadores de red disponibles
   final List<NetworkEntity> _networks = [
     const NetworkEntity(
-      id: 'AT_T',
-      name: 'AT&T',
-      icon: '📱',
+      id: 'tigo',
+      name: 'Tigo',
+      icon: 'assets/networks/icono_tigo.png',
       fee: 0.00,
       minAmount: 10.0,
       maxAmount: 500.0,
     ),
     const NetworkEntity(
-      id: 'TMOBILE',
-      name: 'T-Mobile',
-      icon: '📱',
+      id: 'claro',
+      name: 'Claro',
+      icon: 'assets/networks/icono_claro.png',
       fee: 0.00,
       minAmount: 10.0,
       maxAmount: 500.0,
     ),
     const NetworkEntity(
-      id: 'VERIZON',
-      name: 'Verizon',
-      icon: '📱',
-      fee: 0.00,
-      minAmount: 10.0,
-      maxAmount: 500.0,
-    ),
-    const NetworkEntity(
-      id: 'SPRINT',
-      name: 'Sprint',
-      icon: '📱',
+      id: 'movistar',
+      name: 'Movistar',
+      icon: 'assets/networks/icono_movistar.png',
       fee: 0.00,
       minAmount: 10.0,
       maxAmount: 500.0,
@@ -52,7 +43,7 @@ class TopUpLocalDataSourceImpl implements TopUpLocalDataSource {
 
   @override
   Future<List<NetworkEntity>> getNetworks() async {
-    // Simulamos un delay de carga de 1 segundo
+
     await Future.delayed(const Duration(seconds: 1));
     return _networks;
   }
@@ -63,28 +54,28 @@ class TopUpLocalDataSourceImpl implements TopUpLocalDataSource {
     required String networkId,
     required double amount,
   }) async {
-    // Simulamos un delay de 2 segundos para procesar la recarga
+
     await Future.delayed(const Duration(seconds: 2));
 
-    // Validar que la red exista
+   
     final network = _networks.firstWhere(
       (net) => net.id == networkId,
       orElse: () => throw Exception('Red no encontrada'),
     );
 
-    // Validar rango de monto
+
     if (amount < network.minAmount || amount > network.maxAmount) {
       throw Exception(
         'El monto debe estar entre \$${network.minAmount} y \$${network.maxAmount}',
       );
     }
 
-    // Validar teléfono (formato simple: 10 dígitos)
+
     if (!RegExp(r'^\d{10}$').hasMatch(phoneNumber.replaceAll(RegExp(r'[^\d]'), ''))) {
       throw Exception('Número de teléfono inválido');
     }
 
-    // Crear recarga
+
     final topUp = TopUpEntity(
       reference: 'TOP-${DateTime.now().millisecondsSinceEpoch}',
       phoneNumber: phoneNumber,

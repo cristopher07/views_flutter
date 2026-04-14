@@ -281,9 +281,11 @@ class _RechargeScreenState extends ConsumerState<RechargeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    Image.asset(
                       network.icon,
-                      style: const TextStyle(fontSize: 28),
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.contain,
                     ),
                     const SizedBox(height: 8),
                     Text(
