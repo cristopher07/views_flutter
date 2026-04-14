@@ -1,14 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:views_flutter/l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../views/screens/account_list_screen.dart';
+import '../views/screens/create_transfer_screen.dart';
+import '../views/screens/transfer_history_screen.dart';
 
-class TransfersView extends StatelessWidget {
+class TransfersView extends ConsumerStatefulWidget {
   const TransfersView({super.key});
 
   @override
+  ConsumerState<TransfersView> createState() => _TransfersViewState();
+}
+
+class _TransfersViewState extends ConsumerState<TransfersView> {
+  int _selectedIndex = 0;
+
+  late final List<Widget> _screens = [
+    const AccountListScreen(),
+    const CreateTransferScreen(),
+    const TransferHistoryScreen(),
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    return Center(
-      child: Text(localizations.transfers),
+    return Scaffold(
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_balance_wallet),
+            label: 'Mis Cuentas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.send),
+            label: 'Nueva Transferencia',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'Historial',
+          ),
+        ],
+      ),
     );
   }
 }
+

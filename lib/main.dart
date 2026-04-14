@@ -1,8 +1,9 @@
 import 'app/presentation/controllers/locale_controller.dart';
+import 'app/router/app_router.dart';
 import 'core/environmet/env.dart';
-import 'features/login/presentation/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:views_flutter/l10n/app_localizations.dart';
 
 void main() {
@@ -13,7 +14,11 @@ void main() {
 void runProject() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Env.initialize();
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -29,27 +34,33 @@ class _MyAppState extends State<MyApp> {
     return ValueListenableBuilder<Locale?>(
       valueListenable: controllerLocaleApp,
       builder: (context, locale, _) {
-        return MaterialApp(
-          onGenerateTitle: (context) => AppLocalizations.of(context)!.titleApp,
-          theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          ),
-          locale: locale,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          home: const LoginView(),
-          debugShowCheckedModeBanner: false,
+        return Consumer(
+          builder: (context, ref, child) {
+            final router = ref.watch(appRouterProvider);
+            return MaterialApp.router(
+              onGenerateTitle: (context) => AppLocalizations.of(context)!.titleApp,
+              theme: ThemeData(
+                useMaterial3: true,
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+              ),
+              locale: locale,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              routerConfig: router,
+              debugShowCheckedModeBanner: false,
+            );
+          },
         );
       },
     );
   }
 }
+
 
 
 
