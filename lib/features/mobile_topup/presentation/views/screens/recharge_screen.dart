@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../domain/entities/network_entity.dart';
 import '../../providers/networks_provider.dart';
 import '../../providers/topup_form_provider.dart';
@@ -221,7 +222,7 @@ class _RechargeScreenState extends ConsumerState<RechargeScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: formState.isFormValid
-                  ? () => _handleContinue(ref)
+                  ? () => _handleContinue(context, ref)
                   : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
@@ -308,7 +309,9 @@ class _RechargeScreenState extends ConsumerState<RechargeScreen> {
     );
   }
 
-  void _handleContinue(WidgetRef ref) {
+  void _handleContinue(BuildContext context, WidgetRef ref) {
     ref.read(topUpFormProvider.notifier).submitTopUp();
+    // Navegar a la pantalla de confirmación
+    context.push('/confirmation');
   }
 }

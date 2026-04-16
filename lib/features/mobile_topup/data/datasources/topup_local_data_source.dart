@@ -71,7 +71,7 @@ class TopUpLocalDataSourceImpl implements TopUpLocalDataSource {
     }
 
 
-    if (!RegExp(r'^\d{10}$').hasMatch(phoneNumber.replaceAll(RegExp(r'[^\d]'), ''))) {
+    if (!RegExp(r'^\d{8}$').hasMatch(phoneNumber.replaceAll(RegExp(r'[^\d]'), ''))) {
       throw Exception('Número de teléfono inválido');
     }
 
