@@ -3,42 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/topup_form_provider.dart';
 
-class ConfirmationScreen extends ConsumerWidget {
-  const ConfirmationScreen({super.key});
+class TransferSuccessfulScreen extends ConsumerWidget {
+  const TransferSuccessfulScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formState = ref.watch(topUpFormProvider);
 
-    // Listener que se ejecuta cuando isLoading cambia de true a false con topUpResult
-    ref.listen<TopUpFormState>(topUpFormProvider, (previous, next) {
-      // Solo navegar si:
-      // 1. Había isLoading en true antes
-      // 2. Ahora isLoading es false
-      // 3. Hay un topUpResult
-      if (previous != null && 
-          previous.isLoading == true && 
-          next.isLoading == false && 
-          next.topUpResult != null) {
-        // La transferencia se completó exitosamente
-        Future.microtask(() {
-          if (context.mounted) {
-            context.go('/transfer-successful');
-          }
-        });
-      } else if (next.error != null && previous?.error == null && next.topUpResult == null) {
-        // Mostrar error si es necesario
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.error!),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    });
-
-    // Si no hay datos de topup seleccionados, redirigir a recharge
-    if (formState.selectedNetworkId == null || formState.selectedAmount == null) {
+    // Si no hay resultado de topup, redirigir a recharge
+    if (formState.topUpResult == null) {
       Future.microtask(() => context.go('/'));
       return const SizedBox.shrink();
     }
@@ -49,38 +22,47 @@ class ConfirmationScreen extends ConsumerWidget {
         centerTitle: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 40),
+
+            // Icono de éxito animado
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: Colors.green.shade100,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.green.shade700,
+                  size: 80,
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+
             // Título
             const Text(
-              'Confirmation',
+              'Transfer Successful!',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
 
-            // Pregunta
+            // Descripción
             const Text(
-              'Are you sure?',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Please make sure that you want to\nRecharge your mobile',
+              'Your recharge has been transferred\nsuccessfully',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -88,7 +70,7 @@ class ConfirmationScreen extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 48),
 
             // Card con resumen
             Container(
@@ -195,19 +177,19 @@ class ConfirmationScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 24),
 
-                  // Status badge (Pending)
+                  // Status badge (Successful)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.red.shade100,
+                      color: Colors.green.shade100,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      formState.isLoading ? 'Processing...' : 'Transaction Status: Pending',
+                      'Transaction Status: Paid',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Colors.red.shade900,
+                        color: Colors.green.shade900,
                       ),
                     ),
                   ),
@@ -216,58 +198,52 @@ class ConfirmationScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 40),
 
-            // Botón Pay Now
+            // Botones
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: formState.isLoading
-                    ? null
-                    : () => _handlePayNow(ref),
+                onPressed: () => context.go('/receipt'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
-                  disabledBackgroundColor: Colors.grey.shade300,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: formState.isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : const Text(
-                        'Pay Now',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-              ),
-            ),
-
-            // Error message
-            if (formState.error != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    formState.error!,
-                    style: TextStyle(color: Colors.red.shade900),
+                child: const Text(
+                  'View Receipt',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () {
+                  ref.read(topUpFormProvider.notifier).reset();
+                  context.go('/');
+                },
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Back Home',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -281,9 +257,5 @@ class ConfirmationScreen extends ConsumerWidget {
       'movistar': 'Movistar',
     };
     return networks[networkId] ?? 'Unknown';
-  }
-
-  void _handlePayNow(WidgetRef ref) {
-    ref.read(topUpFormProvider.notifier).submitTopUp();
   }
 }
