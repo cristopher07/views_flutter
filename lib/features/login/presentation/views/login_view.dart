@@ -1,8 +1,10 @@
 import '../../../../core/assets.dart';
 import '../../../../app/presentation/views/home_tabs_view.dart';
 import '../../../../core/environmet/env.dart';
+import '../providers/login_provider.dart';
 import '../widgets/social_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:views_flutter/l10n/app_localizations.dart';
 
 class LoginView extends StatelessWidget {
@@ -40,12 +42,13 @@ class LoginView extends StatelessWidget {
   }
 }
 
-class BodyWidget extends StatefulWidget {
+class BodyWidget extends ConsumerStatefulWidget {
   const BodyWidget({super.key});
 
   @override
-  State<BodyWidget> createState() => _BodyWidgetState();
+  ConsumerState<BodyWidget> createState() => _BodyWidgetState();
 }
+
 class SocialMedia extends StatelessWidget {
   const SocialMedia({super.key});
 
@@ -64,14 +67,43 @@ class SocialMedia extends StatelessWidget {
   }
 }
 
-class _BodyWidgetState extends State<BodyWidget> {
+class _BodyWidgetState extends ConsumerState<BodyWidget> {
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
   bool _obscuredPasswordIs = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final themeApp = Theme.of(context);
     final schemeColorApp = themeApp.colorScheme;
+    final loginState = ref.watch(loginProvider);
+
+    // Listener para navegar cuando login es exitoso
+    ref.listen<LoginState>(loginProvider, (previous, next) {
+      if (next.isAuthenticated && previous?.isAuthenticated != true) {
+        // Login exitoso, navegar a home
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute<void>(
+            builder: (_) => const HomeTabsView(),
+          ),
+        );
+      }
+    });
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -88,15 +120,26 @@ class _BodyWidgetState extends State<BodyWidget> {
             ),
           ),
           const SizedBox(height: 24),
+
+          // Email TextField
           TextField(
+            controller: _emailController,
+            enabled: !loginState.isLoading,
             decoration: InputDecoration(
               hintText: localizations.addressEmail,
               filled: true,
               border: const OutlineInputBorder(),
+              errorText: loginState.error != null
+                  ? loginState.error
+                  : null,
             ),
           ),
           const SizedBox(height: 16),
+
+          // Password TextField
           TextField(
+            controller: _passwordController,
+            enabled: !loginState.isLoading,
             obscureText: _obscuredPasswordIs,
             decoration: InputDecoration(
               hintText: localizations.password,
@@ -115,6 +158,8 @@ class _BodyWidgetState extends State<BodyWidget> {
             ),
           ),
           const SizedBox(height: 8),
+
+          // Forgot Password
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
@@ -123,21 +168,34 @@ class _BodyWidgetState extends State<BodyWidget> {
             ),
           ),
           const SizedBox(height: 12),
+
+          // Login Button
           FilledButton(
-            onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute<void>(
-                  builder: (_) => const HomeTabsView(),
-                ),
-              );
-            },
+            onPressed: loginState.isLoading
+                ? null
+                : () {
+                    ref.read(loginProvider.notifier).login(
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                  },
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: const StadiumBorder(),
             ),
-            child: Text(localizations.login),
+            child: loginState.isLoading
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Text(localizations.login),
           ),
           const SizedBox(height: 16),
+
+          // Sign Up
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -170,5 +228,4 @@ class _BodyWidgetState extends State<BodyWidget> {
       ),
     );
   }
-
 }
