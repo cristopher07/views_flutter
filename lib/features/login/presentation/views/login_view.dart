@@ -1,7 +1,8 @@
 import '../../../../core/assets.dart';
 import '../../../../app/presentation/views/home_tabs_view.dart';
 import '../../../../core/environmet/env.dart';
-import '../providers/login_provider.dart';
+import '../providers/login_providers.dart';
+import '../providers/login_notifier.dart';
 import '../widgets/social_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -129,9 +130,7 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
               hintText: localizations.addressEmail,
               filled: true,
               border: const OutlineInputBorder(),
-              errorText: loginState.error != null
-                  ? loginState.error
-                  : null,
+              errorText: loginState.error != null ? loginState.error : null,
             ),
           ),
           const SizedBox(height: 16),
@@ -147,7 +146,9 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
               border: const OutlineInputBorder(),
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscuredPasswordIs ? Icons.visibility_off : Icons.visibility,
+                  _obscuredPasswordIs
+                      ? Icons.visibility_off
+                      : Icons.visibility,
                 ),
                 onPressed: () {
                   setState(() {

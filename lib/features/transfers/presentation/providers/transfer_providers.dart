@@ -5,6 +5,7 @@ import '../../domain/repositories/transfer_repository.dart';
 import '../../domain/usecases/create_transfer_use_case.dart';
 import '../../domain/usecases/get_accounts_usecase.dart';
 import '../../domain/usecases/get_transfer_history_usecase.dart';
+import 'transfer_bloc.dart';
 
 // Datasource Provider
 final transferLocalDataSourceProvider = Provider<TransferLocalDataSource>((ref) {
@@ -31,4 +32,10 @@ final createTransferUseCaseProvider = Provider<CreateTransferUseCase>((ref) {
 final getTransferHistoryUseCaseProvider = Provider<GetTransferHistoryUseCase>((ref) {
   final repository = ref.watch(transferRepositoryProvider);
   return GetTransferHistoryUseCase(repository: repository);
+});
+
+// BLoC Provider
+final transferBlocProvider = Provider<TransferBloc>((ref) {
+  final useCase = ref.watch(createTransferUseCaseProvider);
+  return TransferBloc(createTransferUseCase: useCase);
 });

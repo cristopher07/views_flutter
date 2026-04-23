@@ -4,6 +4,7 @@ import '../../data/repositories/topup_repository_impl.dart';
 import '../../domain/repositories/topup_repository.dart';
 import '../../domain/usecases/create_topup_usecase.dart';
 import '../../domain/usecases/get_networks_usecase.dart';
+import 'topup_bloc.dart';
 
 // Datasource Provider
 final topupLocalDataSourceProvider = Provider<TopUpLocalDataSource>((ref) {
@@ -25,4 +26,10 @@ final getNetworksUseCaseProvider = Provider<GetNetworksUseCase>((ref) {
 final createTopUpUseCaseProvider = Provider<CreateTopUpUseCase>((ref) {
   final repository = ref.watch(topupRepositoryProvider);
   return CreateTopUpUseCase(repository: repository);
+});
+
+// BLoC Provider
+final topUpBlocProvider = Provider<TopUpBloc>((ref) {
+  final useCase = ref.watch(createTopUpUseCaseProvider);
+  return TopUpBloc(createTopUpUseCase: useCase);
 });
