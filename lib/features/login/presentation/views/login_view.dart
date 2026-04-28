@@ -3,7 +3,9 @@ import '../../../../app/presentation/views/home_tabs_view.dart';
 import '../../../../core/environmet/env.dart';
 import '../providers/login_providers.dart';
 import '../providers/login_notifier.dart';
+import '../providers/login_state.dart';
 import '../widgets/social_widget.dart';
+import 'register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:views_flutter/l10n/app_localizations.dart';
@@ -94,16 +96,31 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
     final schemeColorApp = themeApp.colorScheme;
     final loginState = ref.watch(loginProvider);
 
+    // Calcular estados derivados con pattern matching
+    final isLoading = loginState.maybeWhen(
+      loading: () => true,
+      orElse: () => false,
+    );
+
+    final errorMessage = loginState.maybeWhen(
+      error: (message) => message,
+      orElse: () => null,
+    );
+
     // Listener para navegar cuando login es exitoso
     ref.listen<LoginState>(loginProvider, (previous, next) {
-      if (next.isAuthenticated && previous?.isAuthenticated != true) {
-        // Login exitoso, navegar a home
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute<void>(
-            builder: (_) => const HomeTabsView(),
-          ),
-        );
-      }
+      next.whenOrNull(
+        success: (user, email) {
+          if (previous?.whenOrNull(success: (_, __) => null) == null) {
+            // Login exitoso, navegar a home
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute<void>(
+                builder: (_) => const HomeTabsView(),
+              ),
+            );
+          }
+        },
+      );
     });
 
     return Padding(
@@ -125,12 +142,12 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
           // Email TextField
           TextField(
             controller: _emailController,
-            enabled: !loginState.isLoading,
+            enabled: !isLoading,
             decoration: InputDecoration(
               hintText: localizations.addressEmail,
               filled: true,
               border: const OutlineInputBorder(),
-              errorText: loginState.error != null ? loginState.error : null,
+              errorText: errorMessage,
             ),
           ),
           const SizedBox(height: 16),
@@ -138,7 +155,7 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
           // Password TextField
           TextField(
             controller: _passwordController,
-            enabled: !loginState.isLoading,
+            enabled: !isLoading,
             obscureText: _obscuredPasswordIs,
             decoration: InputDecoration(
               hintText: localizations.password,
@@ -172,7 +189,7 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
 
           // Login Button
           FilledButton(
-            onPressed: loginState.isLoading
+            onPressed: isLoading
                 ? null
                 : () {
                     ref.read(loginProvider.notifier).login(
@@ -184,7 +201,7 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: const StadiumBorder(),
             ),
-            child: loginState.isLoading
+            child: isLoading
                 ? const SizedBox(
                     height: 20,
                     width: 20,
@@ -203,7 +220,11 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
               Text('${localizations.memberNot} '),
               TextButton(
                 onPressed: () {
-                  debugPrint('Navigate to Sign Up');
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (context) => const RegisterView(),
+                    ),
+                  );
                 },
                 child: Text(
                   localizations.nowRegister,
