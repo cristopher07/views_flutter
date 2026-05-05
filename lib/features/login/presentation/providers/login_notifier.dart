@@ -1,13 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/usecases/login_usecase.dart';
 import 'login_state.dart';
 
 /// Notifier para manejar la lógica de autenticación
 class LoginNotifier extends StateNotifier<LoginState> {
-  LoginNotifier() : super(const LoginState.initial());
+  final LoginUseCase loginUseCase;
+  final GetCurrentUserUseCase getCurrentUserUseCase;
+  final LogoutUseCase logoutUseCase;
 
-  /// Simular login con credenciales
-  /// Usuario: admin@mail.com
-  /// Contraseña: 123456
+  LoginNotifier({
+    required this.loginUseCase,
+    required this.getCurrentUserUseCase,
+    required this.logoutUseCase,
+  }) : super(const LoginState.initial());
+
+  /// Realizar login con credenciales
   Future<void> login(String email, String password) async {
     if (email.isEmpty || password.isEmpty) {
       state = const LoginState.error(
@@ -18,33 +25,42 @@ class LoginNotifier extends StateNotifier<LoginState> {
 
     state = const LoginState.loading();
 
-    // Simular delay de API
-    await Future.delayed(const Duration(seconds: 2));
-
-    // Validar credenciales (simulado)
-    if (email == 'admin@mail.com' && password == '123456') {
-      state = LoginState.success(
-        user: email.split('@')[0],
-        email: email,
+    try {
+      final user = await loginUseCase(email: email, password: password);
+      state = LoginState.success(user: user);
+    } catch (e) {
+      state = LoginState.error(
+        message: e.toString().replaceAll('Exception: ', ''),
       );
-    } else {
-      state = const LoginState.error(
-        message: 'Email o contraseña incorrectos',
+    }
+  }
+
+  /// Obtener usuario actual
+  Future<void> getCurrentUser(String token) async {
+    try {
+      final user = await getCurrentUserUseCase(token: token);
+      state = LoginState.success(user: user);
+    } catch (e) {
+      state = LoginState.error(
+        message: e.toString().replaceAll('Exception: ', ''),
       );
     }
   }
 
   /// Cerrar sesión
-  void logout() {
-    state = const LoginState.logout();
-    state = const LoginState.initial();
+  Future<void> logout() async {
+    try {
+      await logoutUseCase();
+      state = const LoginState.initial();
+    } catch (e) {
+      state = LoginState.error(
+        message: e.toString().replaceAll('Exception: ', ''),
+      );
+    }
   }
 
   /// Limpiar error
   void clearError() {
-    state.maybeMap(
-      error: (_) => state = const LoginState.initial(),
-      orElse: () {},
-    );
+    state = const LoginState.initial();
   }
 }

@@ -1,5 +1,12 @@
-import '../entities/login_entity.dart';
+import '../entities/user_entity.dart';
 
 abstract class LoginRepository {
-  Future<LoginEntity> getLoginState();
+  Future<UserEntity> login({
+    required String email,
+    required String password,
+  });
+
+  Future<UserEntity> getCurrentUser({required String token});
+
+  Future<void> logout();
 }

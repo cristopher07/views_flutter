@@ -110,8 +110,8 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
     // Listener para navegar cuando login es exitoso
     ref.listen<LoginState>(loginProvider, (previous, next) {
       next.whenOrNull(
-        success: (user, email) {
-          if (previous?.whenOrNull(success: (_, __) => null) == null) {
+        success: (user) {
+          if (previous?.whenOrNull(success: (_) => null) == null) {
             // Login exitoso, navegar a home
             Navigator.of(context).pushReplacement(
               MaterialPageRoute<void>(
