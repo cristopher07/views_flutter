@@ -1,10 +1,11 @@
 import '../entities/user_entity.dart';
 
 abstract class LoginRepository {
-  Future<UserEntity> login({
-    required String email,
-    required String password,
-  });
+  Stream<UserEntity?> authStateChanges();
+
+  UserEntity? get currentUser;
+
+  Future<UserEntity> login({required String email, required String password});
 
   Future<UserEntity> getCurrentUser({required String token});
 

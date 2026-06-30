@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,9 +12,13 @@ import '../../features/mobile_topup/presentation/views/screens/receipt_screen.da
 import '../../features/transfers/presentation/views/transfers_view.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final loginRepository = ref.watch(loginRepositoryProvider);
   final isAuthenticated = ref.watch(isAuthenticatedProvider);
 
   return GoRouter(
+    refreshListenable: GoRouterRefreshStream(
+      loginRepository.authStateChanges(),
+    ),
     redirect: (context, state) {
       // Si el usuario no está autenticado y no está en /login, redirigir a login
       if (!isAuthenticated && state.uri.path != '/login') {
@@ -57,11 +63,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       // Puedes agregar más rutas aquí según necesites
     ],
-    errorBuilder: (context, state) => Scaffold(
-      appBar: AppBar(title: const Text('Error')),
-      body: Center(
-        child: Text('Ruta no encontrada: ${state.uri}'),
-      ),
-    ),
+    errorBuilder:
+        (context, state) => Scaffold(
+          appBar: AppBar(title: const Text('Error')),
+          body: Center(child: Text('Ruta no encontrada: ${state.uri}')),
+        ),
   );
 });
+
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}

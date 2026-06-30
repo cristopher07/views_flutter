@@ -1,13 +1,12 @@
 import '../../../../core/assets.dart';
-import '../../../../app/presentation/views/home_tabs_view.dart';
 import '../../../../core/environmet/env.dart';
 import '../providers/login_providers.dart';
-import '../providers/login_notifier.dart';
 import '../providers/login_state.dart';
 import '../widgets/social_widget.dart';
 import 'register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:views_flutter/l10n/app_localizations.dart';
 
 class LoginView extends StatelessWidget {
@@ -30,10 +29,7 @@ class LoginView extends StatelessWidget {
                 child: SizedBox(
                   height: 210,
                   width: double.infinity,
-                  child: Image.asset(
-                    Assets.logo,
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.asset(Assets.logo, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -113,21 +109,14 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
         success: (user) {
           if (previous?.whenOrNull(success: (_) => null) == null) {
             // Login exitoso, navegar a home
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute<void>(
-                builder: (_) => const HomeTabsView(),
-              ),
-            );
+            context.goNamed('home');
           }
         },
       );
     });
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 24,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -163,9 +152,7 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
               border: const OutlineInputBorder(),
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscuredPasswordIs
-                      ? Icons.visibility_off
-                      : Icons.visibility,
+                  _obscuredPasswordIs ? Icons.visibility_off : Icons.visibility,
                 ),
                 onPressed: () {
                   setState(() {
@@ -189,27 +176,29 @@ class _BodyWidgetState extends ConsumerState<BodyWidget> {
 
           // Login Button
           FilledButton(
-            onPressed: isLoading
-                ? null
-                : () {
-                    ref.read(loginProvider.notifier).login(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
-                  },
+            onPressed:
+                isLoading
+                    ? null
+                    : () {
+                      ref
+                          .read(loginProvider.notifier)
+                          .login(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                    },
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: const StadiumBorder(),
             ),
-            child: isLoading
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                    ),
-                  )
-                : Text(localizations.login),
+            child:
+                isLoading
+                    ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                    : Text(localizations.login),
           ),
           const SizedBox(height: 16),
 

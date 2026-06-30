@@ -6,13 +6,20 @@ import 'login_state.dart';
 class LoginNotifier extends StateNotifier<LoginState> {
   final LoginUseCase loginUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
+  final GetCurrentFirebaseUserUseCase getCurrentFirebaseUserUseCase;
   final LogoutUseCase logoutUseCase;
 
   LoginNotifier({
     required this.loginUseCase,
     required this.getCurrentUserUseCase,
+    required this.getCurrentFirebaseUserUseCase,
     required this.logoutUseCase,
-  }) : super(const LoginState.initial());
+  }) : super(const LoginState.initial()) {
+    final currentUser = getCurrentFirebaseUserUseCase();
+    if (currentUser != null) {
+      state = LoginState.success(user: currentUser);
+    }
+  }
 
   /// Realizar login con credenciales
   Future<void> login(String email, String password) async {

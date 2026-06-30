@@ -1,16 +1,24 @@
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/login_repository.dart';
+import '../datasources/firebase_login_data_source.dart';
 import '../datasources/login_local_data_source.dart';
-import '../datasources/login_remote_data_source.dart';
 
 class LoginRepositoryImpl implements LoginRepository {
-  final LoginRemoteDataSource remoteDataSource;
+  final FirebaseLoginDataSource firebaseDataSource;
   final LoginLocalDataSource localDataSource;
 
   LoginRepositoryImpl({
-    required this.remoteDataSource,
+    required this.firebaseDataSource,
     required this.localDataSource,
   });
+
+  @override
+  Stream<UserEntity?> authStateChanges() {
+    return firebaseDataSource.authStateChanges();
+  }
+
+  @override
+  UserEntity? get currentUser => firebaseDataSource.currentUser;
 
   @override
   Future<UserEntity> login({
@@ -18,18 +26,12 @@ class LoginRepositoryImpl implements LoginRepository {
     required String password,
   }) async {
     try {
-      // Llamar al API remoto
-      final userModel = await remoteDataSource.login(
+      final userModel = await firebaseDataSource.login(
         email: email,
         password: password,
       );
 
-      // Guardar usuario y tokens localmente
       await localDataSource.saveUser(userModel);
-      await localDataSource.saveTokens(
-        accessToken: userModel.accessToken,
-        refreshToken: userModel.refreshToken,
-      );
 
       return userModel;
     } catch (e) {
@@ -39,26 +41,26 @@ class LoginRepositoryImpl implements LoginRepository {
 
   @override
   Future<UserEntity> getCurrentUser({required String token}) async {
-    try {
-      // Obtener usuario actual del API
-      return await remoteDataSource.getCurrentUser(token: token);
-    } catch (e) {
-      // Si falla, intentar obtener del cache local
-      final cachedUser = await localDataSource.getCachedUser();
-      if (cachedUser != null) {
-        return cachedUser;
-      }
-      throw Exception('Error al obtener usuario: $e');
+    final currentUser = firebaseDataSource.currentUser;
+    if (currentUser != null) {
+      return currentUser;
     }
+
+    final cachedUser = await localDataSource.getCachedUser();
+    if (cachedUser != null) {
+      return cachedUser;
+    }
+
+    throw Exception('No hay usuario autenticado.');
   }
 
   @override
   Future<void> logout() async {
     try {
+      await firebaseDataSource.logout();
       await localDataSource.clearAll();
     } catch (e) {
       throw Exception('Error al hacer logout: $e');
     }
   }
 }
-
