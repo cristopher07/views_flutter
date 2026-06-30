@@ -1,6 +1,9 @@
-import '../../../../app/presentation/controllers/locale_controller.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:views_flutter/l10n/app_localizations.dart';
+
+import '../../../../app/presentation/controllers/locale_controller.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -52,7 +55,9 @@ class SettingsView extends StatelessWidget {
                   selected: {codeLanguageSelected},
                   showSelectedIcon: false,
                   onSelectionChanged: (selection) {
-                    controllerLocaleApp.codeLanguageSet(selection.first);
+                    unawaited(
+                      controllerLocaleApp.codeLanguageSet(selection.first),
+                    );
                   },
                 );
               },

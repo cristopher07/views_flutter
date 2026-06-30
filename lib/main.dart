@@ -17,6 +17,7 @@ void runProject() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Env.initialize();
+  await controllerLocaleApp.loadSavedLocale();
   runApp(const ProviderScope(child: MyApp()));
 }
 
