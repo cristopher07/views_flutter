@@ -4,9 +4,17 @@ import '../repositories/transfer_repository.dart';
 class CreateTransferUseCase {
   final TransferRepository repository;
 
-  const CreateTransferUseCase(this.repository);
+  const CreateTransferUseCase({required this.repository});
 
-  Future<TransferEntity> call() {
-    return repository.createTransfer();
+  Future<TransferEntity> call({
+    required String accountFromId,
+    required String accountToId,
+    required double amount,
+  }) {
+    return repository.createTransfer(
+      accountFromId: accountFromId,
+      accountToId: accountToId,
+      amount: amount,
+    );
   }
 }

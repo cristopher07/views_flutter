@@ -41,7 +41,22 @@ class _MyAppState extends State<MyApp> {
                   (context) => AppLocalizations.of(context)!.titleApp,
               theme: ThemeData(
                 useMaterial3: true,
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: const Color(0xFFFFCC00),
+                  primary: Colors.black,
+                  secondary: const Color(0xFFFFCC00),
+                ),
+                appBarTheme: const AppBarTheme(
+                  backgroundColor: Color(0xFFFFCC00),
+                  foregroundColor: Colors.black,
+                  centerTitle: false,
+                ),
+                filledButtonTheme: FilledButtonThemeData(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: const Color(0xFFFFCC00),
+                  ),
+                ),
               ),
               locale: locale,
               supportedLocales: AppLocalizations.supportedLocales,

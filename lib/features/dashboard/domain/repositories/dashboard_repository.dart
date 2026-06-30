@@ -1,5 +1,5 @@
-import '../entities/dashboard_entity.dart';
+import '../entities/account_summary_entity.dart';
 
 abstract class DashboardRepository {
-  Future<DashboardEntity> getDashboardData();
+  Future<List<AccountSummaryEntity>> getAccounts();
 }
