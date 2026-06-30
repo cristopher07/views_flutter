@@ -24,7 +24,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
   @override
   Future<void> saveUser(UserModel user) async {
     _cachedUser = user;
-    // TODO: Perseguir en SharedPreferences/Hive
+
   }
 
   @override
@@ -39,7 +39,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
   }) async {
     _accessToken = accessToken;
     _refreshToken = refreshToken;
-    // TODO: Perseguir en SharedPreferences/Hive de forma segura
+  
   }
 
   @override
@@ -58,6 +58,6 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     _cachedUser = null;
     _accessToken = null;
     _refreshToken = null;
-    // TODO: Limpiar SharedPreferences/Hive
+
   }
 }

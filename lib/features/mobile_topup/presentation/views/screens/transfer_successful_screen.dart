@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/topup_form_provider.dart';
+import '../../../../login/presentation/providers/login_providers.dart';
 
 class TransferSuccessfulScreen extends ConsumerWidget {
   const TransferSuccessfulScreen({super.key});
@@ -9,6 +10,7 @@ class TransferSuccessfulScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formState = ref.watch(topUpFormProvider);
+    final displayName = ref.watch(currentUserDisplayNameProvider);
 
     // Si no hay resultado de topup, redirigir a recharge
     if (formState.topUpResult == null) {
@@ -18,11 +20,36 @@ class TransferSuccessfulScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mobile Top Up'),
+        title: displayName == null
+            ? const Text('Mobile Top Up')
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Mobile Top Up'),
+                  Text(
+                    displayName,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                ],
+              ),
         centerTitle: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            tooltip: 'Cerrar sesión',
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await ref.read(loginProvider.notifier).logout();
+              if (context.mounted) context.go('/login');
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

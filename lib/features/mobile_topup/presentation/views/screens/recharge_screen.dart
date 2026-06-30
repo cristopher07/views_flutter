@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../domain/entities/network_entity.dart';
 import '../../providers/networks_provider.dart';
 import '../../providers/topup_form_provider.dart';
+import '../../../../login/presentation/providers/login_providers.dart';
 
 class RechargeScreen extends ConsumerStatefulWidget {
   const RechargeScreen({super.key});
@@ -32,13 +33,39 @@ class _RechargeScreenState extends ConsumerState<RechargeScreen> {
   Widget build(BuildContext context) {
     final networkAsync = ref.watch(networksProvider);
     final formState = ref.watch(topUpFormProvider);
+    final displayName = ref.watch(currentUserDisplayNameProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mobile Top Up'),
+        title: displayName == null
+            ? const Text('Mobile Top Up')
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Mobile Top Up'),
+                  Text(
+                    displayName,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                ],
+              ),
         centerTitle: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            tooltip: 'Cerrar sesión',
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await ref.read(loginProvider.notifier).logout();
+              if (context.mounted) context.go('/login');
+            },
+          ),
+        ],
       ),
       body: networkAsync.when(
         data: (networks) => _buildForm(context, networks, formState, ref),

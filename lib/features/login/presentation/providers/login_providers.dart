@@ -7,13 +7,14 @@ import '../../domain/usecases/login_usecase.dart';
 import '../../../../core/http/http_client.dart';
 import 'login_state.dart';
 import 'login_notifier.dart';
+import '../../domain/entities/user_entity.dart';
 
-// ============ HTTP CLIENT ============
+
 final httpClientProvider = Provider<HttpClient>((ref) {
   return HttpClient(baseUrl: 'https://dummyjson.com');
 });
 
-// ============ DATA SOURCES ============
+
 final loginRemoteDataSourceProvider = Provider<LoginRemoteDataSource>((ref) {
   final httpClient = ref.watch(httpClientProvider);
   return LoginRemoteDataSourceImpl(httpClient: httpClient);
@@ -23,7 +24,7 @@ final loginLocalDataSourceProvider = Provider<LoginLocalDataSource>((ref) {
   return LoginLocalDataSourceImpl();
 });
 
-// ============ REPOSITORY ============
+
 final loginRepositoryProvider = Provider<LoginRepository>((ref) {
   final remoteDataSource = ref.watch(loginRemoteDataSourceProvider);
   final localDataSource = ref.watch(loginLocalDataSourceProvider);
@@ -33,7 +34,7 @@ final loginRepositoryProvider = Provider<LoginRepository>((ref) {
   );
 });
 
-// ============ USE CASES ============
+
 final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
   final repository = ref.watch(loginRepositoryProvider);
   return LoginUseCase(repository);
@@ -49,7 +50,6 @@ final logoutUseCaseProvider = Provider<LogoutUseCase>((ref) {
   return LogoutUseCase(repository);
 });
 
-// ============ STATE NOTIFIER ============
 final loginProvider = StateNotifierProvider<LoginNotifier, LoginState>((ref) {
   final loginUseCase = ref.watch(loginUseCaseProvider);
   final getCurrentUserUseCase = ref.watch(getCurrentUserUseCaseProvider);
@@ -62,8 +62,6 @@ final loginProvider = StateNotifierProvider<LoginNotifier, LoginState>((ref) {
   );
 });
 
-// ============ HELPER PROVIDERS ============
-/// Verifica si el usuario está autenticado
 final isAuthenticatedProvider = Provider<bool>((ref) {
   final state = ref.watch(loginProvider);
   return state.maybeWhen(
@@ -72,7 +70,7 @@ final isAuthenticatedProvider = Provider<bool>((ref) {
   );
 });
 
-/// Obtiene el usuario actual autenticado
+
 final currentUserProvider = Provider<String?>((ref) {
   final state = ref.watch(loginProvider);
   return state.maybeWhen(
@@ -81,8 +79,19 @@ final currentUserProvider = Provider<String?>((ref) {
   );
 });
 
-/// Obtiene todos los datos del usuario
-final userDataProvider = Provider<dynamic>((ref) {
+final currentUserDisplayNameProvider = Provider<String?>((ref) {
+  final state = ref.watch(loginProvider);
+  return state.maybeWhen(
+    success: (user) {
+      final fullName = '${user.firstName} ${user.lastName}'.trim();
+      if (fullName.isNotEmpty) return fullName;
+      return user.username;
+    },
+    orElse: () => null,
+  );
+});
+
+final userDataProvider = Provider<UserEntity?>((ref) {
   final state = ref.watch(loginProvider);
   return state.maybeWhen(
     success: (user) => user,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/topup_form_provider.dart';
+import '../../../../login/presentation/providers/login_providers.dart';
 
 class ConfirmationScreen extends ConsumerWidget {
   const ConfirmationScreen({super.key});
@@ -9,13 +10,11 @@ class ConfirmationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formState = ref.watch(topUpFormProvider);
+    final displayName = ref.watch(currentUserDisplayNameProvider);
 
     // Listener que se ejecuta cuando isLoading cambia de true a false con topUpResult
     ref.listen<TopUpFormState>(topUpFormProvider, (previous, next) {
-      // Solo navegar si:
-      // 1. Había isLoading en true antes
-      // 2. Ahora isLoading es false
-      // 3. Hay un topUpResult
+    
       if (previous != null && 
           previous.isLoading == true && 
           next.isLoading == false && 
@@ -45,7 +44,22 @@ class ConfirmationScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mobile Top Up'),
+        title: displayName == null
+            ? const Text('Mobile Top Up')
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Mobile Top Up'),
+                  Text(
+                    displayName,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                ],
+              ),
         centerTitle: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -53,6 +67,16 @@ class ConfirmationScreen extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Cerrar sesión',
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await ref.read(loginProvider.notifier).logout();
+              if (context.mounted) context.go('/login');
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
